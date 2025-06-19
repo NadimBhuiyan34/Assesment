@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Product extends Model
 {
@@ -29,7 +30,6 @@ class Product extends Model
         'length',
         'width',
         'height',
-        'category_id',
         'tags',
         'specifications',
         'status',
@@ -65,15 +65,16 @@ class Product extends Model
     }
 
 
-    public function category()
-    {
-        return $this->belongsTo(Category::class);
-    }
-
     // Product.php
     public function images()
     {
         return $this->hasMany(ProductImage::class, 'product_id');
+    }
+
+    public function categories(): BelongsToMany
+    {
+        return $this->belongsToMany(Category::class, CategoryProduct::class)
+            ->withTimestamps();
     }
    
 }

@@ -15,7 +15,7 @@ class ProductSeeder extends Seeder
      */
     public function run(): void
     {
-        $categories = Category::pluck('id')->toArray();
+       
        
 
         $products = [
@@ -125,7 +125,6 @@ class ProductSeeder extends Seeder
                 'length' => rand(10, 40),
                 'width' => rand(5, 20),
                 'height' => rand(5, 20),
-                'category_id' => fake()->randomElement($categories),
                 'tags' => $p['tags'],
                 'specifications' => $p['specifications'],
                 'status' => true,

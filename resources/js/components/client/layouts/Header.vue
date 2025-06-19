@@ -72,8 +72,8 @@ function closeAll() {
         <div class="container mx-auto flex  items-center justify-between px-4 py-3 lg:py-4">
             <!-- Logo -->
             <Link href="/" class="text-3xl font-extrabold tracking-tight" @click="closeMobile">
-                <span class="bg-gradient-to-r from-blue-700 to-purple-500 bg-clip-text text-transparent">Review</span>
-                <span class="text-red-500">Hub</span>
+                <span class="bg-gradient-to-r from-blue-700 to-purple-500 bg-clip-text text-transparent">Creative Tech </span>
+                <span class="text-red-500">Park</span>
             </Link>
 
             <!-- Desktop search -->

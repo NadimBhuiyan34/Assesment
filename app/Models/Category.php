@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Category extends Model
 {
@@ -43,9 +44,14 @@ class Category extends Model
         return $this->belongsTo(self::class, 'parent_id');
     }
 
-     public function child()
+    public function child()
     {
         return $this->hasMany(Category::class, 'parent_id');
-     }
+    }
 
+    public function products(): BelongsToMany
+    {
+        return $this->belongsToMany(Product::class, CategoryProduct::class)
+            ->withTimestamps();
+    }
 }

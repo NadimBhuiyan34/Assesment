@@ -2,49 +2,32 @@
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import { Undo2 } from 'lucide-vue-next';
+import { defineProps } from 'vue';
 
-interface Category {
-    id: string;
-    name: string;
-    slug: string;
-}
-interface Brand {
-    id: string;
-    name: string;
-    slug: string;
-}
-interface Shop {
-    id: string;
-    name: string;
-    slug: string;
-}
+interface Category { id: string; name: string; slug: string }
 interface Product {
     id: string;
     name: string;
     slug: string;
     description: string;
-    price: number;
-    discount_price: number;
+    price: number | string;
+    discount_price: number | string;
     stock: number;
     is_featured: boolean;
     is_active: boolean;
-    weight: string;
-    length: string;
-    width: string;
-    height: string;
-    category_id: string;
-    brand_id: string;
-    shop_id: string;
+    weight: number | string;
+    length: number | string;
+    width: number | string;
+    height: number | string;
     tags: string;
     specifications: string;
     status: boolean;
+    categories: string[]; // category IDs associated with this product
 }
 
 const props = defineProps<{
     product: Product;
     categories: Category[];
-    brands: Brand[];
-    shops: Shop[];
 }>();
 
 const form = useForm({
@@ -60,28 +43,31 @@ const form = useForm({
     length: props.product.length,
     width: props.product.width,
     height: props.product.height,
-    category_id: props.product.category_id,
-    brand_id: props.product.brand_id,
-    shop_id: props.product.shop_id,
     tags: props.product.tags,
     specifications: props.product.specifications,
     status: props.product.status,
+    productCategories: props.product.categories || [],
 });
 
 const submit = () => form.put(`/products/${props.product.slug}`);
+
+const breadcrumbs = [
+    { title: 'Products', href: '/products' },
+    { title: 'Edit', href: `/products/${props.product.slug}/edit` },
+];
 </script>
 
 <template>
-    <AppLayout>
 
-        <Head title="Edit Product" />
+    <Head title="Edit Product" />
 
+    <AppLayout :breadcrumbs="breadcrumbs">
         <div class="p-6 w-full mx-auto bg-gray-100 rounded shadow">
-            <h1 class="text-2xl font-bold mb-6">Create New Product</h1>
+            <h1 class="text-2xl font-bold mb-6">Edit Product</h1>
 
             <form @submit.prevent="submit" class="space-y-5 bg-white p-6 rounded-xl shadow-md w-full mx-auto">
 
-                <!-- Basic info -->
+                <!-- Name -->
                 <div>
                     <label class="block text-gray-700 font-medium mb-1">Name</label>
                     <input v-model="form.name" type="text"
@@ -89,6 +75,7 @@ const submit = () => form.put(`/products/${props.product.slug}`);
                     <p v-if="form.errors.name" class="text-red-600 text-sm mt-1">{{ form.errors.name }}</p>
                 </div>
 
+                <!-- Description -->
                 <div>
                     <label class="block text-gray-700 font-medium mb-1">Description</label>
                     <textarea v-model="form.description" rows="4"
@@ -115,7 +102,7 @@ const submit = () => form.put(`/products/${props.product.slug}`);
                     </div>
                 </div>
 
-                <!-- Inventory -->
+                <!-- Stock -->
                 <div>
                     <label class="block text-gray-700 font-medium mb-1">Stock</label>
                     <input v-model="form.stock" type="number" min="0"
@@ -124,20 +111,21 @@ const submit = () => form.put(`/products/${props.product.slug}`);
                 </div>
 
                 <!-- Flags -->
+
                 <div class="flex flex-wrap gap-6">
                     <label class="flex items-center space-x-2">
-                        <input v-model="form.is_featured" type="checkbox" />
+                        <input type="checkbox" v-model="form.is_featured" />
                         <span>Featured</span>
                     </label>
 
                     <label class="flex items-center space-x-2">
-                        <input v-model="form.is_active" type="checkbox" />
+                        <input type="checkbox" v-model="form.is_active" />
                         <span>Active</span>
                     </label>
 
                     <label class="flex items-center space-x-2">
-                        <input v-model="form.status" type="checkbox" />
-                        <span>Status&nbsp;(True&nbsp;=&nbsp;visible)</span>
+                        <input type="checkbox" v-model="form.status" />
+                        <span>Status (True = visible)</span>
                     </label>
                 </div>
 
@@ -151,44 +139,22 @@ const submit = () => form.put(`/products/${props.product.slug}`);
                     </div>
                 </div>
 
-                <!-- Relations -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <!-- Category -->
-                    <div>
-                        <label class="block text-gray-700 font-medium mb-1">Category</label>
-                        <select v-model="form.category_id"
-                            class="w-full border rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
-                            <option value="">-- Select --</option>
-                            <option v-for="c in props.categories" :key="c.id" :value="c.id">{{ c.name }}</option>
-                        </select>
-                        <p v-if="form.errors.category_id" class="text-red-600 text-sm mt-1">{{ form.errors.category_id
-                            }}</p>
+                <!-- Categories as checkboxes -->
+                <div>
+                    <label class="font-medium text-gray-700">Categories</label>
+                    <div class="flex flex-wrap gap-3 mt-2">
+                        <label v-for="cat in props.categories" :key="cat.id" class="inline-flex items-center">
+                            <input type="checkbox" :value="cat.id" v-model="form.productCategories"
+                                class="form-checkbox h-4 w-4 text-blue-600" />
+                            <span class="ml-2">{{ cat.name }}</span>
+                        </label>
                     </div>
-
-                    <!-- Brand -->
-                    <div>
-                        <label class="block text-gray-700 font-medium mb-1">Brand</label>
-                        <select v-model="form.brand_id"
-                            class="w-full border rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
-                            <option value="">-- None --</option>
-                            <option v-for="b in props.brands" :key="b.id" :value="b.id">{{ b.name }}</option>
-                        </select>
-                        <p v-if="form.errors.brand_id" class="text-red-600 text-sm mt-1">{{ form.errors.brand_id }}</p>
-                    </div>
-
-                    <!-- Shop -->
-                    <div>
-                        <label class="block text-gray-700 font-medium mb-1">Shop</label>
-                        <select v-model="form.shop_id"
-                            class="w-full border rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
-                            <option value="">-- None --</option>
-                            <option v-for="s in props.shops" :key="s.id" :value="s.id">{{ s.name }}</option>
-                        </select>
-                        <p v-if="form.errors.shop_id" class="text-red-600 text-sm mt-1">{{ form.errors.shop_id }}</p>
-                    </div>
+                    <p v-if="form.errors.productCategories" class="text-red-600 text-sm mt-1">{{
+                        form.errors.productCategories }}</p>
                 </div>
 
-                <!-- Tags & Specifications -->
+
+                <!-- Tags -->
                 <div>
                     <label class="block text-gray-700 font-medium mb-1">Tags (comma-separated)</label>
                     <input v-model="form.tags" type="text" placeholder="new,summer,sale"
@@ -196,12 +162,13 @@ const submit = () => form.put(`/products/${props.product.slug}`);
                     <p v-if="form.errors.tags" class="text-red-600 text-sm mt-1">{{ form.errors.tags }}</p>
                 </div>
 
+                <!-- Specifications -->
                 <div>
                     <label class="block text-gray-700 font-medium mb-1">Specifications (JSON)</label>
                     <textarea v-model="form.specifications" rows="3" placeholder='{"color":"red"}'
                         class="w-full border rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"></textarea>
                     <p v-if="form.errors.specifications" class="text-red-600 text-sm mt-1">{{ form.errors.specifications
-                        }}</p>
+                    }}</p>
                 </div>
 
                 <!-- Actions -->

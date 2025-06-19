@@ -4,19 +4,13 @@ import { Head, Link, useForm } from '@inertiajs/vue3';
 import { Undo2 } from 'lucide-vue-next';
 import { defineProps } from 'vue';
 
-// --- Types --------------------------------------------------------------
-interface Category { id: string; name: string, slug: string }
-interface Brand { id: string; name: string, slug: string }
-interface Shop { id: string; name: string, slug: string }
+// --- Types
+interface Category { id: string; name: string; slug: string }
 
-// --- Props --------------------------------------------------------------
-const props = defineProps<{
-    categories: Category[];
-    brands: Brand[];
-    shops: Shop[];
-}>();
+// --- Props
+const props = defineProps<{ categories: Category[]; }>();
 
-// --- Form state ---------------------------------------------------------
+// --- Form
 const form = useForm({
     name: '',
     slug: '',
@@ -30,12 +24,10 @@ const form = useForm({
     length: '',
     width: '',
     height: '',
-    category_id: '',
-    brand_id: '',
-    shop_id: '',
-    tags: '',   // comma-separated -> "new,summer,sale"
-    specifications: '',   // JSON string      -> {"color":"red"}
+    tags: '',
+    specifications: '',
     status: true,
+    productCategories: [], // <-- array of selected category UUIDs
 });
 
 const submit = () => form.post('/products');
@@ -129,21 +121,21 @@ const breadcrumbs = [
                     </div>
                 </div>
 
-                <!-- Relations -->
-                <div class="grid grid-cols-1 md:grid-cols-1 gap-4">
-                    <!-- Category -->
-                    <div>
-                        <label class="block text-gray-700 font-medium mb-1">Category</label>
-                        <select v-model="form.category_id"
-                            class="w-full border rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
-                            <option value="">-- Select --</option>
-                            <option v-for="c in categories" :key="c.id" :value="c.id">{{ c.name }}</option>
-                        </select>
-                        <p v-if="form.errors.category_id" class="text-red-600 text-sm mt-1">{{ form.errors.category_id
-                        }}</p>
+                <!-- Category more -->
+                <div class="mb-4">
+                    <label class="font-medium text-gray-700">Choose Categories:</label>
+                    <div class="flex flex-wrap gap-3 mt-2">
+                        <label v-for="cat in props.categories" :key="cat.id" class="inline-flex items-center">
+                            <input type="checkbox" :value="cat.id" v-model="form.productCategories"
+                                class="form-checkbox h-4 w-4 text-blue-600" />
+                            <span class="ml-2">{{ cat.name }}</span>
+                        </label>
                     </div>
-
+                    <p v-if="form.errors.productCategories" class="text-red-600 text-sm mt-1">
+                        {{ form.errors.productCategories }}
+                    </p>
                 </div>
+
 
                 <!-- Tags & Specifications -->
                 <div>

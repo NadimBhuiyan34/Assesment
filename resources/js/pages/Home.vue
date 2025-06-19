@@ -4,12 +4,12 @@ import { Head } from '@inertiajs/vue3'
 
 import Slider from '@/components/client/home/Slider.vue'
 import FeaturedProduct from '@/components/client/home/FeaturedProduct.vue'
-// import Category from '@/components/client_side/home/Category.vue'
-// import NewArrivals from '@/components/client_side/home/NewArrivals.vue'
-// import FlashDeals from '@/components/client_side/home/FlashDeals.vue'
-// import WhyChooseUs from '@/components/client_side/home/ChooseUs.vue'
-// import Testimonials from '@/components/client_side/home/Testimonials.vue'
-// import NewsletterSignup from '@/components/client_side/home/NewsletterSignup.vue'
+import Category from '@/components/client/home/Category.vue'
+import NewArrivals from '@/components/client/home/NewArrivals.vue'
+import FlashDeals from '@/components/client/home/FlashDeals.vue'
+import WhyChooseUs from '@/components/client/home/ChooseUs.vue'
+import Testimonials from '@/components/client/home/Testimonials.vue'
+import NewsletterSignup from '@/components/client/home/NewsletterSignup.vue'
 import { defineProps, ref, watch } from 'vue'
 
  
@@ -142,22 +142,22 @@ const sliders = ref([
       <FeaturedProduct :products="products" :auth="auth" />
 
       <!-- Product Categories -->
-      <!-- <Category :categories="categories" /> -->
+      <Category :categories="categories" />
 
       <!-- New Arrivals -->
-      <!-- <NewArrivals :arrivals="newArrivals" /> -->
+      <NewArrivals :arrivals="newArrivals" />
 
       <!-- Flash Deals -->
-      <!-- <FlashDeals :deals="flashDeals" /> -->
+      <FlashDeals :deals="flashDeals" />
 
       <!-- Why Choose Us -->
-      <!-- <WhyChooseUs :features="features" /> -->
+      <WhyChooseUs :features="features" />
 
       <!-- Testimonials -->
-      <!-- <Testimonials :testimonials="testimonials" /> -->
+      <Testimonials :testimonials="testimonials" />
 
       <!-- Newsletter Signup -->
-      <!-- <NewsletterSignup /> -->
+      <NewsletterSignup />
     </section>
   </ClientLayout>
 </template>

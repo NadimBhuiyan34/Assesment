@@ -36,10 +36,6 @@ return new class extends Migration
             $table->decimal('width', 8, 2)->nullable();
             $table->decimal('height', 8, 2)->nullable();
 
-            // Foreign Keys
-            $table->uuid('category_id');
-            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
-
             // Optional JSON Fields
             $table->json('tags')->nullable();          // ["new", "summer", "sale"]
             $table->json('specifications')->nullable(); // {"color":"red", "material":"cotton"}

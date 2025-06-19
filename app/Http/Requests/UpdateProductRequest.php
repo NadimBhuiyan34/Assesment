@@ -33,12 +33,13 @@ class UpdateProductRequest extends FormRequest
             'length'           => 'nullable|numeric|min:0',
             'width'            => 'nullable|numeric|min:0',
             'height'           => 'nullable|numeric|min:0',
-            'category_id'      => 'required|uuid|exists:categories,id',
             'brand_id'         => 'nullable|uuid|exists:brands,id',
             'shop_id'          => 'nullable|uuid|exists:shops,id',
             'tags'             => 'nullable|string',
             'specifications'   => 'nullable|json',
             'status'           => 'boolean',
+            'productCategories'   => ['required','array','min:1'],
+            'productCategories.*' => ['required','uuid','exists:categories,id'],
         ];
     }
 }
