@@ -108,11 +108,12 @@ const breadcrumbs: BreadcrumbItem[] = [
                                 </span>
                             </td>
                             <td class="px-4 py-3 text-right flex justify-end gap-2">
-                                <Link :href="`/products/${product.slug}`"
+                                <Link :href="route('product_images.index', { slug: product.slug })"
                                     class="inline-flex items-center px-2 py-1 bg-green-100 text-blue-700 hover:bg-blue-200 rounded-md transition">
                                 <Images class="w-4 h-4 mr-1" />
                                 <span class="hidden sm:inline">Image Upload</span>
                                 </Link>
+
                                 <Link :href="`/products/${product.slug}/edit`"
                                     class="inline-flex items-center px-2 py-1 bg-blue-100 text-blue-700 hover:bg-blue-200 rounded-md transition">
                                 <PenLine class="w-4 h-4 mr-1" />

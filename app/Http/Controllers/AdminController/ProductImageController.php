@@ -8,16 +8,32 @@ use App\Http\Requests\StoreProductImageRequest;
 use App\Http\Requests\UpdateProductImageRequest;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Illuminate\Support\Facades\Storage;
 
 class ProductImageController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $slug = $request->query('slug');
+
+        if (!$slug) {
+            abort(404, 'Product slug is required');
+        }
+
+        $product = Product::with('images')
+            ->select('id', 'slug', 'name')
+            ->where('slug', $slug)
+            ->firstOrFail();
+
+        return Inertia::render('admin/product/ImageUpload', [
+            'product' => $product,
+        ]);
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -32,8 +48,8 @@ class ProductImageController extends Controller
      */
     public function store(Request $request)
     {
-       
-        
+
+
 
         $request->validate([
             'product_id' => 'required|exists:products,id',
@@ -86,8 +102,9 @@ class ProductImageController extends Controller
      */
     public function destroy(ProductImage $productImage)
     {
+      
         $productImage->delete();
 
-        return back()->with('success', 'Image uploaded successfully.');
+        return back()->with('success', 'Image deleted successfully.');
     }
 }
