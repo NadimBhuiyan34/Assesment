@@ -3,13 +3,12 @@
 use App\Http\Controllers\AdminController\CategoryController;
 use App\Http\Controllers\AdminController\ProductController;
 use App\Http\Controllers\AdminController\ProductImageController;
+use App\Http\Controllers\ClientController\HomeController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 
-Route::get('/', function () {
-    return Inertia::render('Welcome');
-})->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     
